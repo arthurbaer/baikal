@@ -3,8 +3,8 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Baikal-Tag (z. B. 0.13.0)"
-        default: "0.13.0"
+        description: "Baikal-Version (Git-Tag aus github.com/sabre-io/Baikal/tags)"
+        default: "latest"
 jobs:
   build:
     runs-on: ubuntu-latest
