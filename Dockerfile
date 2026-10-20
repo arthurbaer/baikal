@@ -1,8 +1,10 @@
 # syntax=docker/dockerfile:1
+ARG BAIKAL_VERSION
 
 # ---- Stage 1: Baikal-Quelltext holen und Abhängigkeiten installieren ----
 FROM composer:2 AS build
-ARG BAIKAL_VERSION=0.13.0
+ARG BAIKAL_VERSION
+RUN test -n "$BAIKAL_VERSION" || (echo "BAIKAL_VERSION fehlt (--build-arg)" && exit 1)
 RUN apk add --no-cache git
 WORKDIR /src
 RUN git clone --depth 1 --branch "${BAIKAL_VERSION}" https://github.com/sabre-io/Baikal.git . \
@@ -12,7 +14,7 @@ RUN git clone --depth 1 --branch "${BAIKAL_VERSION}" https://github.com/sabre-io
 
 # ---- Stage 2: Laufzeit-Image (Apache + PHP) ----
 FROM php:8.3-apache
-ARG BAIKAL_VERSION=0.13.0
+ARG BAIKAL_VERSION
 LABEL org.opencontainers.image.title="Baikal" \
       org.opencontainers.image.version="${BAIKAL_VERSION}" \
       org.opencontainers.image.source="https://github.com/sabre-io/Baikal" \
