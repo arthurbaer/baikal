@@ -1,10 +1,16 @@
 name: build-baikal-image
 on:
+  schedule:
+    - cron: "0 0 * * *"
   workflow_dispatch:
     inputs:
       version:
         description: "Baikal-Version (Git-Tag aus github.com/sabre-io/Baikal/tags)"
         default: "latest"
+      force:
+        description: "Bauen, auch wenn das Image für diese Version bereits existiert."
+        type: boolean
+        default: false
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,11 +25,34 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Version bestimmen und Image prüfen
+        id: v
+        run: |
+          V="${{ inputs.version }}"
+          [ -z "$V" ] && V="latest"
+          if [ "$V" = "latest" ]; then
+            V=$(git ls-remote --tags --refs --sort=-v:refname \
+                https://github.com/sabre-io/Baikal.git \
+                | awk -F/ '{print $NF}' | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | head -n1)
+          fi
+          [ -z "$V" ] && { echo "Keine Version gefunden"; exit 1; }
+          IMAGE="ghcr.io/arthurbaer/baikal:$V"
+          if docker buildx imagetools inspect "$IMAGE" >/dev/null 2>&1 \
+             && [ "${{ inputs.force }}" != "true" ]; then
+            echo "Image $IMAGE existiert bereits, nichts zu tun."
+            echo "build=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "build=true" >> "$GITHUB_OUTPUT"
+          fi
+          echo "version=$V" >> "$GITHUB_OUTPUT"
+
       - uses: docker/build-push-action@v7
+        if: steps.v.outputs.build == 'true'
         with:
           context: .
           push: true
-          build-args: BAIKAL_VERSION=${{ inputs.version }}
+          build-args: BAIKAL_VERSION=${{ steps.v.outputs.version }}
           tags: |
-            ghcr.io/${{ github.repository_owner }}/baikal:${{ inputs.version }}
-            ghcr.io/${{ github.repository_owner }}/baikal:latest
+            ghcr.io/arthurbaer/baikal:${{ steps.v.outputs.version }}
+            ghcr.io/arthurbaer/baikal:latest
