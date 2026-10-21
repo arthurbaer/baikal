@@ -38,8 +38,12 @@ jobs:
           fi
           [ -z "$V" ] && { echo "Keine Version gefunden"; exit 1; }
           IMAGE="ghcr.io/arthurbaer/baikal:$V"
+          # Geplante Läufe bauen immer neu, damit Updates des PHP-Basisimages
+          # (php:8.3-apache) automatisch im Image landen. Bei manuellen Läufen
+          # wird nur gebaut, wenn das Image fehlt oder "force" gesetzt ist.
           if docker buildx imagetools inspect "$IMAGE" >/dev/null 2>&1 \
-             && [ "${{ inputs.force }}" != "true" ]; then
+             && [ "${{ inputs.force }}" != "true" ] \
+             && [ "${{ github.event_name }}" != "schedule" ]; then
             echo "Image $IMAGE existiert bereits, nichts zu tun."
             echo "build=false" >> "$GITHUB_OUTPUT"
           else
@@ -51,6 +55,7 @@ jobs:
         if: steps.v.outputs.build == 'true'
         with:
           context: .
+          pull: true
           push: true
           build-args: BAIKAL_VERSION=${{ steps.v.outputs.version }}
           tags: |
