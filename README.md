@@ -21,7 +21,7 @@ Einrichtungsassistent: `http://HOST:8080/admin/`
 - Den Ordner `Specific/db` muss auf dem Host selbst angelegt werden, sonst überdeckt das leere Volume und Baikal kann die Datenbank nicht erstellen.
 - Verfügbare Versionen: siehe [Packages](https://github.com/arthurbaer?tab=packages). `latest` zeigt immer auf die neueste.
 
-## Selbst bauen (optional)
+## Selbst bauen
 
 ```bash
 docker build --build-arg BAIKAL_VERSION=0.13.0 -t baikal:0.13.0 .
