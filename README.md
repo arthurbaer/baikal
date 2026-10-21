@@ -6,6 +6,7 @@
       -v ./data/Specific:/var/www/baikal/Specific \
       baikal:latest
 
-Setup-Assistent: http://HOST:8080/admin/
+Setup-Assistent:
+http://HOST:8080/admin/
 Host-Verzeichnisse müssen www-data (UID/GID 33) gehören: `chown -R 33:33 data`
 Andere Version: `--build-arg BAIKAL_VERSION=<tag>`
