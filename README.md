@@ -3,6 +3,10 @@
 Automatisch gebautes Image von [sabre-io/Baikal](https://github.com/sabre-io/Baikal),
 veröffentlicht unter `ghcr.io/arthurbaer/baikal`.
 
+Baïkal ist ein schlanker CalDAV- und CardDAV-Server. Er bietet eine umfangreiche Weboberfläche, über die sich Benutzer, Adressbücher und Kalender einfach verwalten lassen. Die Installation ist schnell und unkompliziert und erfordert lediglich einen einfachen PHP-fähigen Server. Die Daten können in einer MySQL-, PostgreSQL- oder SQLite-Datenbank gespeichert werden.
+
+Mit Baïkal greifst du nahtlos von jedem Gerät auf deine Kontakte und Kalender zu. Er ist kompatibel mit iOS, macOS, DAVx5 unter Android, Mozilla Thunderbird und jeder anderen Anwendung, die CalDAV und CardDAV unterstützt. Schütze deine Privatsphäre, indem du Kalender und Kontakte selbst hostest – mit Baïkal.
+
 ## Verwendung
 
 ```bash
