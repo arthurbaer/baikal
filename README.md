@@ -1,4 +1,4 @@
-# Baikal Docker-Image
+# Baïkal Docker-Image
 
 Automatisch gebautes Image von [sabre-io/Baikal](https://github.com/sabre-io/Baikal),
 veröffentlicht unter `ghcr.io/arthurbaer/baikal`.
@@ -22,12 +22,12 @@ docker run -d --name baikal -p 8080:80 \
 Einrichtungsassistent: `http://HOST:8080/admin/`
 
 - Die Host-Verzeichnisse müssen `www-data` (UID/GID 33) gehören.
-- Der Ordner `Specific/db` muss auf dem Host selbst angelegt werden, sonst überdeckt das leere Volume ihn und Baikal kann die Datenbank nicht erstellen.
+- Der Ordner `Specific/db` muss auf dem Host selbst angelegt werden, sonst überdeckt das leere Volume ihn und Baïkal kann die Datenbank nicht erstellen.
 - Verfügbare Versionen: siehe [Packages](https://github.com/arthurbaer?tab=packages). `latest` zeigt immer auf die neueste.
 
 ## Echte Client-IP hinter einem Reverse Proxy
 
-Läuft Baikal hinter einem Reverse Proxy (z. B. NPMplus, nginx, Traefik, Caddy), sieht Apache standardmäßig nur die IP des Proxys. Mit `REMOTEIP_TRUSTED_PROXIES` übernimmt das Image die echte Client-IP aus dem `X-Forwarded-For`-Header, sodass sie in den Logs erscheint. Die Funktion ist **standardmäßig aus**: Solange die Variable nicht gesetzt ist, wird keinem Proxy vertraut.
+Läuft Baïkal hinter einem Reverse Proxy (z. B. NPMplus, nginx, Traefik, Caddy), sieht Apache standardmäßig nur die IP des Proxys. Mit `REMOTEIP_TRUSTED_PROXIES` übernimmt das Image die echte Client-IP aus dem `X-Forwarded-For`-Header, sodass sie in den Logs erscheint. Die Funktion ist **standardmäßig aus**: Solange die Variable nicht gesetzt ist, wird keinem Proxy vertraut.
 
 | Variable | Standard | Beschreibung |
 |---|---|---|
@@ -55,4 +55,4 @@ docker build --build-arg BAIKAL_VERSION=0.13.0 -t baikal:0.13.0 .
 ```
 
 Die Build-Pipeline (`.github/workflows/build.yml`) prüft regelmäßig auf neue
-Baikal-Releases und baut das Image automatisch.
+Baïkal-Releases und baut das Image automatisch.
