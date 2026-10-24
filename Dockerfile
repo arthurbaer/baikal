@@ -22,7 +22,7 @@ LABEL org.opencontainers.image.title="Baikal" \
 
 # pdo_sqlite, dom und zlib sind im Basis-Image enthalten; pdo_mysql optional für MySQL/MariaDB
 RUN docker-php-ext-install pdo_mysql \
- && a2enmod rewrite headers expires \
+ && a2enmod rewrite headers expires remoteip \
  && sed -ri 's!/var/www/html!/var/www/baikal/html!g' /etc/apache2/sites-available/*.conf \
  && printf '%s\n' \
       '<Directory /var/www/baikal/html>' \
@@ -33,6 +33,13 @@ RUN docker-php-ext-install pdo_mysql \
       > /etc/apache2/conf-available/baikal.conf \
  && a2enconf baikal
 
+# Echte Client-IP vom Reverse-Proxy erhalten: Config wird beim Start aus
+# REMOTEIP_TRUSTED_PROXIES erzeugt. Wenn kein IP mitgegeben, bleibt die Funktion aus.
+COPY remoteip-setup.sh /usr/local/bin/remoteip-setup.sh
+RUN chmod +x /usr/local/bin/remoteip-setup.sh \
+ && touch /etc/apache2/conf-available/remoteip.conf \
+ && a2enconf remoteip
+
 COPY --from=build --chown=www-data:www-data /src /var/www/baikal
 RUN mkdir -p /var/www/baikal/config /var/www/baikal/Specific/db \
  && chown -R www-data:www-data /var/www/baikal/config /var/www/baikal/Specific
@@ -41,5 +48,7 @@ RUN mkdir -p /var/www/baikal/config /var/www/baikal/Specific/db \
 VOLUME ["/var/www/baikal/config", "/var/www/baikal/Specific"]
 
 EXPOSE 80
+ENTRYPOINT ["remoteip-setup.sh"]
+CMD ["apache2-foreground"]
 HEALTHCHECK --interval=30s --timeout=5s --start-period=15s \
   CMD curl -fsS -o /dev/null http://localhost/ || exit 1
