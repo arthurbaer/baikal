@@ -44,7 +44,7 @@ docker run -d --name baikal -p 8080:80 \
   ghcr.io/arthurbaer/baikal:0.13.0
 ```
 
-Das passende Netz findest du, indem du die Funktion zunächst ausgeschaltet lässt und in `docker logs <container>` die erste Spalte ansiehst: Das ist die IP deines Proxys. Nach dem Setzen der Variable steht dort die echte Client-IP.
+Das passende Netz findest du, indem du die Funktion zunächst ausgeschaltet lässt und in `docker logs <container>` die erste Spalte ansiehst: Das ist die Adresse, über die dein Proxy Baikal erreicht. Nach dem Setzen der Variable steht dort die echte Client-IP.
 
 > **Sicherheitshinweis:** Trage nur das Netz deines eigenen Reverse Proxys ein, niemals `0.0.0.0/0` oder `::/0`. Sonst kann jeder Client seine IP über einen selbst gesendeten Header fälschen. Dein Proxy muss den Header außerdem selbst setzen (NPMplus, nginx und Traefik tun das standardmäßig).
 
