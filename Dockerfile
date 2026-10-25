@@ -33,6 +33,13 @@ RUN docker-php-ext-install pdo_mysql \
       > /etc/apache2/conf-available/baikal.conf \
  && a2enconf baikal
 
+# Kein Loggen des Healt-Checks, um das Logfile sauberer zu halten.
+RUN printf '%s\n' 'SetEnvIf Remote_Addr "^(127\.0\.0\.1|::1)$" dontlog' \
+      > /etc/apache2/conf-available/nolog-local.conf \
+ && a2enconf nolog-local \
+ && sed -ri 's!(CustomLog \$\{APACHE_LOG_DIR\}/access\.log combined)!\1 env=!dontlog!' \
+      /etc/apache2/sites-available/000-default.conf
+
 # Echte Client-IP vom Reverse-Proxy erhalten: Config wird beim Start aus
 # REMOTEIP_TRUSTED_PROXIES erzeugt. Wenn kein IP mitgegeben, bleibt die Funktion aus.
 COPY remoteip-setup.sh /usr/local/bin/remoteip-setup.sh
