@@ -37,7 +37,7 @@ RUN docker-php-ext-install pdo_mysql \
 RUN printf '%s\n' 'SetEnvIf Remote_Addr "^(127\.0\.0\.1|::1)$" dontlog' \
       > /etc/apache2/conf-available/nolog-local.conf \
  && a2enconf nolog-local \
- && sed -ri 's!(CustomLog \$\{APACHE_LOG_DIR\}/access\.log combined)!\1 env=!dontlog!' \
+ && sed -ri 's#(CustomLog \$\{APACHE_LOG_DIR\}/access\.log combined)#\1 env=!dontlog#' \
       /etc/apache2/sites-available/000-default.conf
 
 # Echte Client-IP vom Reverse-Proxy erhalten: Config wird beim Start aus
